@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlContentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+
+        <LinearLayout
+            android:id="@+id/loadContentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="invisible">
+
+            <ProgressBar
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                style="@style/Base.Widget.AppCompat.ProgressBar"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="加载中..."
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ctvContentView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="上拉加载更多"
+            android:textSize="13sp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
