@@ -19,7 +19,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final WjcRefreshRecyclerView recyclerView = (WjcRefreshRecyclerView) findViewById(R.id.alx_recyclerView);
-        String[] names = {"张三","李四","王五","赵六","李明","小白","豆豆","小黑","花花","帅哥","美女","大妈","小明","阿诚","小磊磊","浩总","庆庆","佳爷","璁璁","小可爱"};
+//        String[] names = {"张三","李四","王五","赵六","李明","小白","豆豆","小黑","花花","帅哥","美女","大妈","小明","阿诚","小磊磊","浩总","庆庆","佳爷","璁璁","小可爱"};
+        String[] names = {"张三","李四","王五","赵六"};
         final List<String> nameList = new ArrayList<>();
         for(String s:names) nameList.add(s);
 

@@ -51,6 +51,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
     private static final int HEADER_HEIGHT = 68;//头部高度68dp
     private static final int MAX_PULL_LENGTH = 150;//最多下拉150dp
     private OnClickListener footerClickListener;
+    private static WjcRefreshRecyclerView instance;
 
 
     public WjcRefreshRecyclerView(Context context) {
@@ -63,6 +64,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
 
     public WjcRefreshRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        instance = this;
         initView(context);
     }
 
@@ -506,6 +508,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         return (int) (dp * density + 0.5f);
     }
 
+
     public static abstract class WjcDragRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private static final int TYPE_HEADER = 436874;
         private static final int TYPE_ITEM = 256478;
@@ -573,7 +576,12 @@ public class WjcRefreshRecyclerView extends RecyclerView {
                 //cast holder to VHHeader and set data for header.
 
             }else if(holder instanceof WjcDragRecyclerViewAdapter.VHFooter){
-                if(!loadMore)((VHFooter)holder).footerView.hide();//第一次初始化显示的时候要不要显示footerView
+                if(loadMore){
+                    //当item数据条数较少不足以充满整个屏幕时
+//                    ((VHFooter) holder).footerView.setState(CustomFooterView.STATE_NO_MORE);
+                } else {
+                    ((VHFooter) holder).footerView.hide();//第一次初始化显示的时候要不要显示footerView
+                }
             }
         }
 

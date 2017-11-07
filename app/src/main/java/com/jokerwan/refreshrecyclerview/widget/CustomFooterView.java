@@ -22,6 +22,7 @@ public class CustomFooterView extends LinearLayout{
     public final static int STATE_READY = 1;
     public final static int STATE_LOADING = 2;
     public final static int STATE_ERROR = 3;
+    public final static int STATE_NO_MORE = 4;
 
     private Context mContext;
 
@@ -50,6 +51,10 @@ public class CustomFooterView extends LinearLayout{
             mHintView.setVisibility(INVISIBLE);
         } else if(state == STATE_ERROR){
             layoutLoadmore.setVisibility(GONE);
+        } else if(state == STATE_NO_MORE) {
+            mHintView.setVisibility(View.VISIBLE);
+            mHintView.setText("没有更多数据了");
+
         } else {
             mHintView.setVisibility(View.VISIBLE);
             mHintView.setText("上拉加载更多");
