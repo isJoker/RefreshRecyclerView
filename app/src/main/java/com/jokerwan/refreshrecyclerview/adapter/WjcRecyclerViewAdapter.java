@@ -17,10 +17,14 @@ import java.util.List;
  * Function:
  */
 
-public class WjcRecyclerViewAdapter extends RecyclerView.Adapter<WjcRecyclerViewAdapter.WjcRecyclerViewHolder> {
+public class WjcRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<String> dataList;
     private Context mContext;
+
+    private final int TYPE_HEAD = 1;
+    private final int TYPE_NOMAL = 2;
+    private int currentType;
 
     public WjcRecyclerViewAdapter(List<String> dataList,Context context) {
         this.mContext = context;
@@ -40,18 +44,34 @@ public class WjcRecyclerViewAdapter extends RecyclerView.Adapter<WjcRecyclerView
 
 
     @Override
-    public WjcRecyclerViewAdapter.WjcRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new WjcRecyclerViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_recyclerview,parent,false));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == TYPE_HEAD) {
+            return  new HeadViewHolder(LayoutInflater.from(mContext).inflate(R.layout.adapter_head_view,parent,false));
+        } else {
+            return new WjcRecyclerViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_recyclerview,parent,false));
+        }
     }
 
     @Override
-    public void onBindViewHolder(WjcRecyclerViewAdapter.WjcRecyclerViewHolder holder, int position) {
-        holder.tv.setText(dataList.get(position-1));
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof WjcRecyclerViewHolder) {
+            ((WjcRecyclerViewHolder)holder).tv.setText(dataList.get(position-2));//自己的头🏠下拉刷新的头
+        }
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return dataList.size() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 1) {//position为0时下拉刷新头布局
+            currentType = TYPE_HEAD;
+        } else {
+            currentType = TYPE_NOMAL;
+        }
+        return currentType;
     }
 
     public class WjcRecyclerViewHolder extends RecyclerView.ViewHolder{
@@ -60,6 +80,13 @@ public class WjcRecyclerViewAdapter extends RecyclerView.Adapter<WjcRecyclerView
         public WjcRecyclerViewHolder(View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.tv_test);
+        }
+    }
+
+    private class HeadViewHolder extends RecyclerView.ViewHolder {
+
+        HeadViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

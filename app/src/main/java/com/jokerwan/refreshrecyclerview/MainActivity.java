@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {//模拟两秒网络延迟
                     @Override
                     public void run() {
-                        String[] moreNames = {"新加的名字1","新加的名字2","新加的名字3","新加的名字4","新加的名字5","新加的名字6","新加的名字7","新加的名字8"};
+                        String[] moreNames = {"加载更多的数据1","加载更多的数据2","加载更多的数据3","加载更多的数据4","加载更多的数据5","加载更多的数据6","加载更多的数据7","加载更多的数据8","加载更多的数据9","加载更多的数据10"};
                         List<String> dataList = adapter.getDataList();
                         for(String s:moreNames)dataList.add(s);
                         adapter.notifyItemInserted(nameList.size() - moreNames.length + 1);
@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {//模拟两秒网络延迟
                     @Override
                     public void run() {
-                        String[] moreNames = {"刷新的名字1","刷新的名字2","刷新的名字3","刷新的名字4","刷新的名字5","刷新的名字6","刷新的名字7","刷新的名字8","刷新的名字9","刷新的名字10","刷新的名字11","刷新的名字12"};
+                        String[] refreshNames = {"下拉刷新的数据1","下拉刷新的数据2","下拉刷新的数据3","下拉刷新的数据4","下拉刷新的数据5","下拉刷新的数据6","下拉刷新的数据7","下拉刷新的数据8","下拉刷新的数据9","下拉刷新的数据10"};
                         final List<String> nameList2 = new ArrayList<String>();
-                        for(String s:moreNames) nameList2.add(s);
+                        for(String s:refreshNames) nameList2.add(s);
                         adapter.setDataList(nameList2);//重设数据
                         adapterWrapper.notifyDataSetChanged();
                         recyclerView.stopRefresh();
