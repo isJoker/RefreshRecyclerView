@@ -7,13 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import java.util.List;
+import com.jokerwan.refreshrecyclerview.wrapper.WjcRecyclerViewAdapterWrapper;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,7 +44,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
     private float oldY;
     Handler handler = new Handler();
     private OnRefreshListener refreshListener;
-    private WjcDragRecyclerViewAdapter adapter;
+    private WjcRecyclerViewAdapterWrapper adapter;
     private int maxPullHeight = 50;//最多下拉高度的px值
 
     private static final int HEADER_HEIGHT = 68;//头部高度68dp
@@ -68,7 +67,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         initView(context);
     }
 
-    public void setAdapter(WjcDragRecyclerViewAdapter adapter){
+    public void setAdapter(WjcRecyclerViewAdapterWrapper adapter){
         super.setAdapter(adapter);
         this.adapter = adapter;
     }
@@ -101,14 +100,11 @@ public class WjcRefreshRecyclerView extends RecyclerView {
 
         if (mEnablePullLoad && !mIsLoading) {
             if (height > 150){//必须拉超过一定距离才加载更多
-//            if (height > 1){//立即刷新
                 mFooterView.setState(CustomFooterView.STATE_READY);
                 mIsFooterReady = true;
-//                Log.i("Alex2", "ready");
             } else {
                 mFooterView.setState(CustomFooterView.STATE_NORMAL);
                 mIsFooterReady = false;
-//                Log.i("Alex2", "nomal");
             }
         }
         mFooterView.setBottomMargin(height);
@@ -119,7 +115,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
     private void resetFooterHeight() {
         int bottomMargin = mFooterView.getBottomMargin();
         if (bottomMargin > 20) {
-            Log.i("Alex2", "准备重置高度,margin是" + bottomMargin + "自高是" + footerHeight);
+            Log.i("TAG", "准备重置高度,margin是" + bottomMargin + "自高是" + footerHeight);
             this.smoothScrollBy(0,-bottomMargin);
             //一松手就立即开始加载
             if(mIsFooterReady){
@@ -149,14 +145,14 @@ public class WjcRefreshRecyclerView extends RecyclerView {
                 super.onScrollStateChanged(recyclerView, newState);
                 switch (newState){
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        Log.i("Alex2", "停下了||放手了");
+                        Log.i("TAG", "停下了||放手了");
                         if(isBottom) resetFooterHeight();
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
-                        Log.i("Alex2", "开始拖了,现在margin是" + (mFooterView == null ? "" : mFooterView.getBottomMargin()));
+                        Log.i("TAG", "开始拖了,现在margin是" + (mFooterView == null ? "" : mFooterView.getBottomMargin()));
                         break;
                     case RecyclerView.SCROLL_STATE_SETTLING:
-                        Log.i("Alex2", "开始惯性移动");
+                        Log.i("TAG", "开始惯性移动");
                         break;
                 }
 
@@ -166,7 +162,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastItemPosition = layoutManager.findLastVisibleItemPosition();
-                if(lastItemPosition == layoutManager.getItemCount()-1 && mEnablePullLoad) {//如果到了最后一个
+                if(lastItemPosition == layoutManager.getItemCount()-1 & mEnablePullLoad) {//如果到了最后一个
                     isBottom = true;
                     mFooterView = (CustomFooterView)layoutManager.findViewByPosition(layoutManager.findLastVisibleItemPosition());//一开始还不能hide，因为hide得到最后一个可见的就不是footerview了
                     if(mFooterView!=null) mFooterView.setOnClickListener(footerClickListener);
@@ -326,7 +322,6 @@ public class WjcRefreshRecyclerView extends RecyclerView {
                     if(timer!=null)timer.cancel();
                     return;
                 }
-                Log.i("Alex2","topMargin是"+mHeaderView.getTopMargin()+" height是"+mHeaderView.getHeight());
                 if(mHeaderView.getTopMargin()<0){
                     handler.post(new Runnable() {
                         @Override
@@ -431,7 +426,6 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         // TODO Auto-generated method stub
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.i("Alex", "touch down分发前");
                 oldY = ev.getY();
                 if (timer != null) timer.cancel();
                 break;
@@ -480,7 +474,6 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         if(mHeaderView==null)mHeaderView = (CustomHeaderView) layoutManager.findViewByPosition(0);
         if(mHeaderView!=null)mHeaderView.setState(CustomHeaderView.STATE_REFRESHING);
         mIsRefreshing = true;
-        Log.i("Alex2", "现在开始强制刷新");
         mIsHeaderReady = false;
         smoothShowHeader();
         if (refreshListener != null)refreshListener.onRefresh();
@@ -490,7 +483,6 @@ public class WjcRefreshRecyclerView extends RecyclerView {
     private void startRefresh() {
         mIsRefreshing = true;
         mHeaderView.setState(CustomHeaderView.STATE_REFRESHING);
-        Log.i("Alex2", "现在开始加载");
         mIsHeaderReady = false;
         if (refreshListener != null) refreshListener.onRefresh();
 
@@ -506,124 +498,6 @@ public class WjcRefreshRecyclerView extends RecyclerView {
             return 0;
         }
         return (int) (dp * density + 0.5f);
-    }
-
-
-    public static abstract class WjcDragRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-        private static final int TYPE_HEADER = 436874;
-        private static final int TYPE_ITEM = 256478;
-        private static final int TYPE_FOOTER = 9621147;
-
-        private int ITEM;
-
-        private ViewHolder vhItem;
-        private boolean loadMore;
-
-        private List<T> dataList;
-
-        public List<T> getDataList() {
-            return dataList;
-        }
-
-        public void setDataList(List<T> dataList) {
-            this.dataList = dataList;
-        }
-
-        public WjcDragRecyclerViewAdapter(List<T> dataList, int itemLayout, boolean pullEnable){
-            this.dataList = dataList;
-            this.ITEM = itemLayout;
-            this.loadMore = pullEnable;
-        }
-
-        public abstract ViewHolder setItemViewHolder(View itemView);
-
-        private T getObject(int position){
-            if(dataList!=null && dataList.size()>=position)return dataList.get(position-1);//如果有header
-            return null;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType == TYPE_ITEM) {
-                //inflate your layout and pass it to view holder
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(ITEM,null);
-                this.vhItem = setItemViewHolder(itemView);
-                return vhItem;
-            } else if (viewType == TYPE_HEADER) {
-                //inflate your layout and pass it to view holder
-                View headerView = new CustomHeaderView(parent.getContext());
-                return new VHHeader(headerView);
-            } else if(viewType==TYPE_FOOTER){
-                CustomFooterView footerView = new CustomFooterView(parent.getContext());
-                return new VHFooter(footerView);
-            }
-
-            throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
-        }
-
-        public void setLoadMoreEnable(boolean enable){
-            this.loadMore = enable;
-        }
-
-        public boolean getLoadMoreEnable(){return loadMore;}
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {//相当于getView
-            if (vhItem!=null && holder.getClass() == vhItem.getClass()) {
-                //cast holder to VHItem and set data
-                initItemView(holder,position-1,getObject(position));//减去头布局
-            }else if (holder instanceof WjcDragRecyclerViewAdapter.VHHeader) {
-                //cast holder to VHHeader and set data for header.
-
-            }else if(holder instanceof WjcDragRecyclerViewAdapter.VHFooter){
-                if(loadMore){
-                    //当item数据条数较少不足以充满整个屏幕时
-//                    ((VHFooter) holder).footerView.setState(CustomFooterView.STATE_NO_MORE);
-                } else {
-                    ((VHFooter) holder).footerView.hide();//第一次初始化显示的时候要不要显示footerView
-                }
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return (dataList==null ||dataList.size()==0)?1:dataList.size() + 2;//如果有header,若list不存在或大小为0就没有footView，反之则有
-        }//这里要考虑到头尾部，多以要加2
-
-        /**
-         * 根据位置判断这里该用哪个ViewHolder
-         * @param position
-         * @return
-         */
-        @Override
-        public int getItemViewType(int position) {
-            if (position == 0) return TYPE_HEADER;
-            else if(isPositonFooter(position)) return TYPE_FOOTER;
-            return TYPE_ITEM;
-        }
-
-        private boolean isPositonFooter(int position){//这里的position从0算起
-            if (dataList == null && position == 1) return true;//如果没有item
-            return position == dataList.size() + 1;//如果有item(也许为0)
-        }
-
-        private class VHHeader extends RecyclerView.ViewHolder {
-            private VHHeader(View headerView) {
-                super(headerView);
-            }
-        }
-
-        private class VHFooter extends RecyclerView.ViewHolder {
-            private CustomFooterView footerView;
-
-            private VHFooter(View itemView) {
-                super(itemView);
-                footerView = (CustomFooterView)itemView;
-            }
-        }
-
-        public abstract void initItemView(ViewHolder itemHolder,int posion,T entity);
-
     }
 
 }
