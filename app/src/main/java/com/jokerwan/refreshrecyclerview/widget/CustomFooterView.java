@@ -1,7 +1,6 @@
 package com.jokerwan.refreshrecyclerview.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,27 +88,6 @@ public class CustomFooterView extends LinearLayout{
     public void loading() {
         mHintView.setVisibility(View.GONE);
         layoutLoadmore.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * hide footer when disable pull load more
-     */
-    public void hide() {
-        LayoutParams lp = (LayoutParams)mContentView.getLayoutParams();
-        lp.height = 1;//这里如果设为0那么layoutManger就会抓不到
-        mContentView.setLayoutParams(lp);
-        mContentView.setBackgroundColor(Color.BLACK);//这里的颜色要和自己的背景色一致
-    }
-
-    /**
-     * show footer
-     */
-    public void show() {
-        LayoutParams lp = (LayoutParams)mContentView.getLayoutParams();
-        lp.height = LayoutParams.WRAP_CONTENT;
-        lp.width =  LayoutParams.MATCH_PARENT;
-        mContentView.setLayoutParams(lp);
-        mContentView.setBackgroundColor(Color.WHITE);//这里的颜色要和自己的背景色一致
     }
 
     private void initView(Context context) {
