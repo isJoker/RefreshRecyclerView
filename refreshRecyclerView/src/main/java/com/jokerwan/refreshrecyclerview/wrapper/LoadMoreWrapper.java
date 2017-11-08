@@ -1,4 +1,4 @@
-package com.yl.recyclerview.wrapper;
+package com.jokerwan.refreshrecyclerview.wrapper;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,21 +9,18 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.yl.recyclerview.R;
+import com.jokerwan.refreshrecyclerview.R;
 
 /**
  * 上拉加载更多
- * Created by yangle on 2017/10/16.
  */
 
 public class LoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private RecyclerView.Adapter adapter;
 
-    // 普通布局
-    private final int TYPE_ITEM = 1;
     // 脚布局
-    private final int TYPE_FOOTER = 2;
+    private final int TYPE_FOOTER = 12345;
     // 当前加载状态，默认为加载完成
     private int loadState = 2;
     // 正在加载
@@ -43,7 +40,7 @@ public class LoadMoreWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
         } else {
-            return TYPE_ITEM;
+            return adapter.getItemViewType(position);
         }
     }
 

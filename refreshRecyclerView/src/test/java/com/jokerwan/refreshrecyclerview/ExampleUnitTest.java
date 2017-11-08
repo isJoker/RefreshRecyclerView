@@ -1,4 +1,4 @@
-package com.yl.recyclerview;
+package com.jokerwan.refreshrecyclerview;
 
 import org.junit.Test;
 

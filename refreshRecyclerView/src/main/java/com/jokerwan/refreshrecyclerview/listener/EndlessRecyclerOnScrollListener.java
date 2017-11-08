@@ -1,11 +1,10 @@
-package com.yl.recyclerview.listener;
+package com.jokerwan.refreshrecyclerview.listener;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 /**
  * RecyclerView滑动监听
- * Created by yangle on 2017/10/12.
  */
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {

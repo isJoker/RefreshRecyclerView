@@ -1,4 +1,4 @@
-package com.yl.recyclerview;
+package com.jokerwan.refreshrecyclerview;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

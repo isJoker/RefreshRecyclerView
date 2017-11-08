@@ -1,4 +1,4 @@
-package com.yl.recyclerview.activity;
+package com.jokerwan.refreshrecyclerview.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.yl.recyclerview.R;
-import com.yl.recyclerview.adapter.LoadMoreWrapperAdapter;
-import com.yl.recyclerview.listener.EndlessRecyclerOnScrollListener;
-import com.yl.recyclerview.wrapper.LoadMoreWrapper;
+import com.jokerwan.refreshrecyclerview.R;
+import com.jokerwan.refreshrecyclerview.adapter.LoadMoreWrapperAdapter;
+import com.jokerwan.refreshrecyclerview.listener.EndlessRecyclerOnScrollListener;
+import com.jokerwan.refreshrecyclerview.wrapper.LoadMoreWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,6 @@ import java.util.TimerTask;
 /**
  * RecyclerView下拉刷新、上拉加载更多
  * 使用封装好的LoadMoreWrapper类实现上拉加载更多
- * Created by yangle on 2017/10/16.
  */
 
 public class LoadMoreWrapperActivity extends AppCompatActivity {
@@ -89,7 +88,7 @@ public class LoadMoreWrapperActivity extends AppCompatActivity {
             public void onLoadMore() {
                 loadMoreWrapper.setLoadState(loadMoreWrapper.LOADING);
 
-                if (dataList.size() < 52) {
+                if (dataList.size() < 40) {
                     // 模拟获取网络数据，延时1s
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -112,10 +111,8 @@ public class LoadMoreWrapperActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        char letter = 'A';
-        for (int i = 0; i < 26; i++) {
-            dataList.add(String.valueOf(letter));
-            letter++;
+        for (int i = 0; i < 20; i++) {
+            dataList.add("第 " + i + " 条数据");
         }
     }
 
