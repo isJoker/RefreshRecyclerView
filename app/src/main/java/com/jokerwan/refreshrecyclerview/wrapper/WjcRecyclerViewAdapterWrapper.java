@@ -19,9 +19,8 @@ public class WjcRecyclerViewAdapterWrapper extends RecyclerView.Adapter{
     private static final int TYPE_FOOTER = 9621147;
 
     private RecyclerView.Adapter adapter;
-    private RecyclerView.ViewHolder vhItem;
     private boolean loadMore;
-    private boolean hideFooterView;
+    private boolean HideFooterView;
 
     public WjcRecyclerViewAdapterWrapper(RecyclerView.Adapter adapter){
         this.adapter = adapter;
@@ -32,10 +31,10 @@ public class WjcRecyclerViewAdapterWrapper extends RecyclerView.Adapter{
         if (viewType == TYPE_HEADER) {
             //inflate your layout and pass it to view holder
             View headerView = new CustomHeaderView(parent.getContext());
-            return new VHHeader(headerView);
+            return new WJCHeader(headerView);
         } else if(viewType==TYPE_FOOTER){
             CustomFooterView footerView = new CustomFooterView(parent.getContext());
-            return new VHFooter(footerView);
+            return new WJCFooter(footerView);
         } else {
             //inflate your layout and pass it to view holder
             return adapter.onCreateViewHolder(parent,viewType);
@@ -51,16 +50,12 @@ public class WjcRecyclerViewAdapterWrapper extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {//相当于getView
 
-        if (holder instanceof WjcRecyclerViewAdapterWrapper.VHHeader) {
-            //cast holder to VHHeader and set data for header.
+        if (holder instanceof WJCHeader) {
+            //cast holder to WJCHeader and set data for header.
 
-        }else if(holder instanceof WjcRecyclerViewAdapterWrapper.VHFooter){
+        }else if(holder instanceof WJCFooter){
+            ((WJCFooter) holder).setData();
 
-            if(!loadMore || hideFooterView) {
-                ((VHFooter) holder).footerView.setVisibility(View.GONE);//第一次初始化显示的时候要不要显示footerView
-            } else {
-                ((VHFooter) holder).footerView.setVisibility(View.VISIBLE);
-            }
         } else {
 
             adapter.onBindViewHolder(holder,position);
@@ -70,8 +65,8 @@ public class WjcRecyclerViewAdapterWrapper extends RecyclerView.Adapter{
     /**
      * 提供给外部用来隐藏FooterView（比如ListData只有几条数据不足以充满一屏幕时一般隐藏FooterView）
      */
-    public void setFooterViewVisiable(boolean isVisiable){
-        hideFooterView = isVisiable;
+    public void setFooterViewInVisiable(boolean isInVisiable){
+        HideFooterView = isInVisiable;
     }
 
 
@@ -102,18 +97,24 @@ public class WjcRecyclerViewAdapterWrapper extends RecyclerView.Adapter{
         return position == getItemCount() - 1;//如果有item(也许为0)
     }
 
-    private class VHHeader extends RecyclerView.ViewHolder {
-        private VHHeader(View headerView) {
+    private class WJCHeader extends RecyclerView.ViewHolder {
+        private WJCHeader(View headerView) {
             super(headerView);
         }
     }
 
-    private class VHFooter extends RecyclerView.ViewHolder {
-        private CustomFooterView footerView;
+    private class WJCFooter extends RecyclerView.ViewHolder {
 
-        private VHFooter(View itemView) {
+        private WJCFooter(View itemView) {
             super(itemView);
-            footerView = (CustomFooterView)itemView;
+        }
+
+        public void setData() {
+            if(!loadMore || HideFooterView) {
+                itemView.setVisibility(View.INVISIBLE);
+            } else {
+                itemView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

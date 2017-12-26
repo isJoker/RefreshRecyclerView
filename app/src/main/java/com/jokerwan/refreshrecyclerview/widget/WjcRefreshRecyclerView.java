@@ -161,14 +161,13 @@ public class WjcRefreshRecyclerView extends RecyclerView {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
                 int lastItemPosition = layoutManager.findLastVisibleItemPosition();
                 if(lastItemPosition == layoutManager.getItemCount()-1 & mEnablePullLoad) {//如果到了最后一个
                     isBottom = true;
                     mFooterView = (CustomFooterView)layoutManager.findViewByPosition(layoutManager.findLastVisibleItemPosition());//一开始还不能hide，因为hide得到最后一个可见的就不是footerview了
                     if(mFooterView!=null) mFooterView.setOnClickListener(footerClickListener);
                     if(footerHeight==-1 && mFooterView!=null){
-                        mFooterView.show();
-                        mFooterView.setState(CustomFooterView.STATE_NORMAL);
                         footerHeight = mFooterView.getMeasuredHeight();//这里的测量一般不会出问题
                     }
                     updateFooterHeight(dy);
@@ -193,12 +192,11 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         if(mFooterView == null) return;
         if (!mEnablePullLoad) {
 //            this.smoothScrollBy(0,-footerHeight);
-            mFooterView.hide();
+            mFooterView.setVisibility(GONE);
             mFooterView.setOnClickListener(null);
             mFooterView.setBottomMargin(0);
             //make sure "pull up" don't show a line in bottom when listview with one page
         } else {
-            mFooterView.show();
             mFooterView.setState(CustomFooterView.STATE_NORMAL);
             mFooterView.setVisibility(VISIBLE);
             //make sure "pull up" don't show a line in bottom when listview with one page
@@ -219,7 +217,7 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         if (mIsLoading == true) {
             mIsLoading = false;
             if(mFooterView==null) return;
-            mFooterView.show();
+            mFooterView.setVisibility(VISIBLE);
             mFooterView.setState(CustomFooterView.STATE_ERROR);
         }
     }
@@ -231,6 +229,15 @@ public class WjcRefreshRecyclerView extends RecyclerView {
         mIsFooterReady = false;
         if (loadMoreListener != null) {
             loadMoreListener.onLoadMore();
+        }
+    }
+
+    public void noMoreData(){
+        if (mIsLoading == true) {
+            mIsLoading = false;
+            if(mFooterView==null) return;
+            mFooterView.setVisibility(VISIBLE);
+            mFooterView.setState(CustomFooterView.STATE_NO_MORE);
         }
     }
 

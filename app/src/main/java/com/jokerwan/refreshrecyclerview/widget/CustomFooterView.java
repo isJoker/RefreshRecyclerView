@@ -53,7 +53,6 @@ public class CustomFooterView extends LinearLayout{
         } else if(state == STATE_NO_MORE) {
             mHintView.setVisibility(View.VISIBLE);
             mHintView.setText("没有更多数据了");
-
         } else {
             mHintView.setVisibility(View.VISIBLE);
             mHintView.setText("上拉加载更多");
@@ -81,6 +80,16 @@ public class CustomFooterView extends LinearLayout{
         layoutLoadmore.setVisibility(View.GONE);
     }
 
+    public void hideFooterView(){
+        mHintView.setVisibility(View.GONE);
+        layoutLoadmore.setVisibility(View.GONE);
+    }
+
+    public void showFooterView(){
+        mHintView.setVisibility(View.VISIBLE);
+        layoutLoadmore.setVisibility(View.VISIBLE);
+    }
+
 
     /**
      * loading status
@@ -99,7 +108,6 @@ public class CustomFooterView extends LinearLayout{
         mContentView = moreView.findViewById(R.id.rlContentView);
         layoutLoadmore = moreView.findViewById(R.id.loadContentView);
         mHintView = moreView.findViewById(R.id.ctvContentView);
-        mHintView.setText("load more");
 //            layoutLoadmore.setVisibility(VISIBLE);//一直会显示转圈，自动加载更多时使用
     }
 }

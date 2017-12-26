@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.jokerwan.refreshrecyclerview.adapter.WjcRecyclerViewAdapter;
 import com.jokerwan.refreshrecyclerview.widget.WjcRefreshRecyclerView;
@@ -28,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
         final WjcRecyclerViewAdapterWrapper adapterWrapper = new WjcRecyclerViewAdapterWrapper(adapter);
 
         //开始让加载更多不可见
-        adapterWrapper.setFooterViewVisiable(true);
-
+        adapterWrapper.setFooterViewInVisiable(true);
         recyclerView.setAdapter(adapterWrapper);//需要先setAdapter,再setLoadMoreEnable
         recyclerView.setLoadMoreEnable(true);
         recyclerView.setPullRefreshEnable(true);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 //让加载更多可见
-                adapterWrapper.setFooterViewVisiable(false);
+                adapterWrapper.setFooterViewInVisiable(false);
             }
         });
 
@@ -58,8 +58,15 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         String[] moreNames = {"加载更多的数据1","加载更多的数据2","加载更多的数据3","加载更多的数据4","加载更多的数据5","加载更多的数据6","加载更多的数据7","加载更多的数据8","加载更多的数据9","加载更多的数据10"};
                         List<String> dataList = adapter.getDataList();
-                        for(String s:moreNames)dataList.add(s);
-                        adapter.notifyItemInserted(nameList.size() - moreNames.length + 1);
+                        if(dataList.size()>30) {//模拟没有数据的情况
+                            moreNames = null;
+                        }
+                        if(moreNames != null && moreNames.length > 0) {
+                            for(String s:moreNames)dataList.add(s);
+                            adapter.notifyItemInserted(nameList.size() - moreNames.length + 1);
+                        } else {
+                            recyclerView.noMoreData();
+                        }
                         recyclerView.stopLoadMore();
                     }
                 },2000);
